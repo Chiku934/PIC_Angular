@@ -1,0 +1,44 @@
+<div class="home-page">
+  <section class="hero">
+    <div class="hero-content">
+      <h1>Welcome to PIC Certificate System</h1>
+      <p>Your trusted platform for professional certificate management and verification</p>
+      <div class="hero-actions">
+        <button class="btn btn-primary btn-large">Get Started</button>
+        <button class="btn btn-outline btn-large">Learn More</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="features">
+    <div class="container">
+      <h2>Why Choose PIC?</h2>
+      <div class="features-grid">
+        <div class="feature-card" *ngFor="let feature of features">
+          <div class="feature-icon">{{ feature.icon }}</div>
+          <h3>{{ feature.title }}</h3>
+          <p>{{ feature.description }}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="stats">
+    <div class="container">
+      <div class="stats-grid">
+        <div class="stat-item" *ngFor="let stat of stats">
+          <div class="stat-number">{{ stat.number }}</div>
+          <div class="stat-label">{{ stat.label }}</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta">
+    <div class="container">
+      <h2>Ready to Get Started?</h2>
+      <p>Join thousands of professionals who trust PIC for their certificate management needs.</p>
+      <button class="btn btn-primary btn-large">Sign Up Now</button>
+    </div>
+  </section>
+</div>

@@ -1,0 +1,58 @@
+<div class="login-container">
+  <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
+    <!-- Logo Section -->
+    <div class="logo-container">
+      <img src="logos/PIC_Logo-removebg-preview.png" alt="Progressive Industrial Consultants">
+    </div>
+
+    <h2>Login to your account</h2>
+
+    <div class="form-group">
+      <label for="email">Email:</label>
+      <input
+        type="email"
+        id="email"
+        formControlName="email"
+        class="form-control"
+        placeholder="Enter your email"
+      />
+      <div *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched" class="error">
+        Email is required
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="password">Password:</label>
+      <input
+        type="password"
+        id="password"
+        formControlName="password"
+        class="form-control"
+        placeholder="Enter your password"
+      />
+      <div *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched" class="error">
+        Password is required
+      </div>
+    </div>
+
+    <div class="form-group checkbox-group">
+      <label class="checkbox-label">
+        <input
+          type="checkbox"
+          formControlName="rememberMe"
+          class="checkbox-input"
+        />
+        <span class="checkmark"></span>
+        Remember me
+      </label>
+    </div>
+
+    <button type="submit" [disabled]="loginForm.invalid || isLoading" class="btn btn-primary">
+      {{ isLoading ? 'Logging in...' : 'Login' }}
+    </button>
+
+    <div *ngIf="errorMessage" class="error-message">
+      {{ errorMessage }}
+    </div>
+  </form>
+</div>
