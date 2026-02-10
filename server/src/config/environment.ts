@@ -1,7 +1,9 @@
 import * as dotenv from 'dotenv';
+import * as path from 'path';
 
 // Load environment variables
-dotenv.config();
+const envPath = path.resolve(__dirname, '../.env');
+dotenv.config({ path: envPath });
 
 interface EnvironmentConfig {
   // Database

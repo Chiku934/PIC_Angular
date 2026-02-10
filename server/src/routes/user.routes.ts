@@ -12,6 +12,7 @@ router.use(authenticate);
 
 // Current user routes
 router.get('/me', UserController.getCurrentUser);
+router.get('/profile', UserController.getCurrentUser); // Alias for /me
 router.put('/me', UserController.updateCurrentUser);
 
 // Admin/Manager only routes

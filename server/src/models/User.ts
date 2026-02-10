@@ -103,6 +103,7 @@ export class UserModel {
    */
   static async verifyPassword(email: string, password: string): Promise<boolean> {
     try {
+      console.log('Verifying password for user:', email);
       const { db } = await import('@/config/database');
       const users = await db.query(`
         SELECT Password
@@ -114,13 +115,18 @@ export class UserModel {
       }) as any[];
 
       if (!users || users.length === 0) {
+        console.log('User not found');
         return false;
       }
 
       const storedHashedPassword = users[0].Password;
+      console.log('Stored password hash:', storedHashedPassword);
       
       // Compare using bcrypt
-      return await bcrypt.compare(password, storedHashedPassword);
+      const isMatch = await bcrypt.compare(password, storedHashedPassword);
+      console.log('Password comparison result:', isMatch);
+      
+      return isMatch;
     } catch (error) {
       console.error('Error verifying password:', error);
       return false;

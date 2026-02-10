@@ -222,40 +222,40 @@ export class AuthService {
   private loadUserProfile(): void {
     const token = this.getToken();
 
-    this.http.get<any>(`${this.API_URL}/users/profile`).subscribe({
-      next: (user) => {
-        // raw API response received
-        
+    this.http.get<any>(`${this.API_URL}/users/me`).subscribe({
+      next: (response) => {
+        const user = response.data; // API returns data in response.data
+
         const mappedUser = {
-          Id: user.UserId,
-          id: user.UserId,
-          username: user.UserName,
-          Email: user.Email,
-          email: user.Email,
-          FirstName: user.FirstName,
-          firstName: user.FirstName,
-          MiddleName: user.MiddleName,
-          middleName: user.MiddleName,
-          LastName: user.LastName,
-          lastName: user.LastName,
+          Id: user.id,
+          id: user.id,
+          username: user.username,
+          Email: user.email,
+          email: user.email,
+          FirstName: user.firstName,
+          firstName: user.firstName,
+          MiddleName: user.middleName,
+          middleName: user.middleName,
+          LastName: user.lastName,
+          lastName: user.lastName,
           displayName: user.displayName,
-          Address: user.Address,
-          address: user.Address,
-          PhoneNo: user.PhoneNo,
-          PhoneNumber: user.PhoneNo,
-          phoneNumber: user.PhoneNo,
-          UserImage: user.UserImage,
-          userImage: user.UserImage,
-          profileImage: user.UserImage,
+          Address: user.address,
+          address: user.address,
+          PhoneNo: user.phoneNumber,
+          PhoneNumber: user.phoneNumber,
+          phoneNumber: user.phoneNumber,
+          UserImage: user.userImage,
+          userImage: user.userImage,
+          profileImage: user.userImage,
           role: user.role,
-          userRole: user.userRole,
-          roles: user.roles || [],
-          roleName: user.roleName,
-          userType: user.userType,
+          userRole: user.role,
+          roles: [user.role] || [],
+          roleName: user.role,
+          userType: user.role,
         };
-        
+
         // mapped user object prepared
-        
+
         this.currentUserSubject.next(mappedUser);
       },
       error: (error) => {
