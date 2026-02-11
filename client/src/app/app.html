@@ -6,12 +6,12 @@
     <app-sidebar *ngIf="showSidebar()"></app-sidebar>
 
     <!-- Main Content Area -->
-    <div class="main-content-area" [class.sidebar-collapsed]="sidebarService.getState()" [class.dashboard-layout]="isDashboard()" [class.login-layout]="isLoginLayout()" [class.profile-layout]="isProfileLayout()">
+    <div class="main-content-area" [class.sidebar-collapsed]="sidebarService.getState()" [class.dashboard-layout]="isDashboard()" [class.login-layout]="isLoginLayout()" [class.profile-layout]="isProfileLayout()" [class.home-layout]="!showSidebar()">
       <app-header [class.sidebar-collapsed]="sidebarService.getState()" [class.dashboard-layout]="isDashboard()"></app-header>
       <main class="main-content">
         <router-outlet />
       </main>
-      <app-footer></app-footer>
+      <app-footer *ngIf="showFooter()"></app-footer>
     </div>
   </div>
 </div>

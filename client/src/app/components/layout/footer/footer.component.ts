@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, NavigationEnd } from '@angular/router';
-import { AuthService } from '../../services/auth.service';
+import { AuthService } from '../../../services/auth.service';
 import { filter, Subscription } from 'rxjs';
 
 @Component({
@@ -24,8 +24,8 @@ export class FooterComponent implements OnInit, OnDestroy {
     // Check if we're on login page
     this.subscription.add(
       this.router.events.pipe(
-        filter(event => event instanceof NavigationEnd)
-      ).subscribe((event: NavigationEnd) => {
+        filter((event): event is NavigationEnd => event instanceof NavigationEnd)
+      ).subscribe((event) => {
         this.isLoginPage = event.url === '/login';
       })
     );

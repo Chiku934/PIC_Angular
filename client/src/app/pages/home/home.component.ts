@@ -10,19 +10,21 @@ interface Application {
   Url?: string;
   IconImageUrl?: string;
   IconClass?: string;
+  Description?: string;
   Children?: Application[];
 }
 
 @Component({
-  selector: 'app-dashboard',
+  selector: 'app-home',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.scss']
+  templateUrl: './home.component.html',
+  styleUrls: ['./home.component.scss']
 })
-export class DashboardComponent implements OnInit {
+export class HomeComponent implements OnInit {
   currentUser: any = null;
   applications: Application[] = [];
+  displayApplications: Application[] = [];
 
   constructor(
     private authService: AuthService,
@@ -38,6 +40,7 @@ export class DashboardComponent implements OnInit {
         this.loadUserMenu();
       } else {
         this.applications = [];
+        this.displayApplications = this.getDefaultApplications();
       }
     });
   }
@@ -53,15 +56,44 @@ export class DashboardComponent implements OnInit {
             ...app,
             IconImageUrl: this.getAppIcon(app.ApplicationName)
           }));
+          this.displayApplications = this.applications.length > 0 ? this.applications : this.getDefaultApplications();
           this.cdr.detectChanges(); // Force change detection
         },
         error: (error) => {
           this.applications = [];
+          this.displayApplications = this.getDefaultApplications();
         }
       });
     } else {
       this.applications = [];
+      this.displayApplications = this.getDefaultApplications();
     }
+  }
+
+  getDefaultApplications(): Application[] {
+    return [
+      {
+        Id: 1,
+        ApplicationName: 'Audit',
+        Url: '/audit',
+        IconImageUrl: '/assets/icons/audit.png',
+        Description: 'Audit management system'
+      },
+      {
+        Id: 2,
+        ApplicationName: 'Certification',
+        Url: '/certification',
+        IconImageUrl: '/assets/icons/certification.png',
+        Description: 'Certificate management system'
+      },
+      {
+        Id: 3,
+        ApplicationName: 'Setup',
+        Url: '/setup',
+        IconImageUrl: '/assets/icons/setup.png',
+        Description: 'System configuration and setup'
+      }
+    ];
   }
 
   getAppIcon(appName: string): string {
@@ -71,7 +103,7 @@ export class DashboardComponent implements OnInit {
       'Setup': '/assets/icons/setup.png'
     };
 
-    return iconMap[appName] || '/assets/images/default-profile-icon.png';
+    return iconMap[appName] || '/assets/images/default-app-icon.png';
   }
 
   logout() {
@@ -92,5 +124,49 @@ export class DashboardComponent implements OnInit {
 
   trackByAppId(index: number, app: Application): number {
     return app.Id;
+  }
+
+  // Additional methods for enhanced home page
+  getDisplayName(): string {
+    if (!this.currentUser) return 'User';
+    
+    if (this.currentUser.displayName) {
+      return this.currentUser.displayName;
+    }
+    
+    const firstName = this.currentUser.firstName || this.currentUser.FirstName || '';
+    const lastName = this.currentUser.lastName || this.currentUser.LastName || '';
+    
+    if (firstName && lastName) {
+      return `${firstName} ${lastName}`;
+    } else if (firstName) {
+      return firstName;
+    }
+    
+    return this.currentUser.username || 'User';
+  }
+
+  getGreeting(): string {
+    const currentHour = new Date().getHours();
+    
+    if (currentHour < 12) {
+      return 'Good Morning';
+    } else if (currentHour < 17) {
+      return 'Good Afternoon';
+    } else {
+      return 'Good Evening';
+    }
+  }
+
+  onImageError(event: any) {
+    event.target.src = '/assets/images/default-app-icon.png';
+  }
+
+  navigateToProfile() {
+    this.router.navigate(['/profile']);
+  }
+
+  refreshApplications() {
+    this.loadUserMenu();
   }
 }

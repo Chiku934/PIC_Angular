@@ -29,9 +29,14 @@ $header-height: 50px;
   @media (min-width: 1201px) {
     margin-left: $sidebar-width;
 
-    &.sidebar-collapsed {
-      margin-left: $sidebar-collapsed-width;
-    }
+  &.sidebar-collapsed {
+    margin-left: $sidebar-collapsed-width;
+  }
+
+  &.home-layout {
+    margin-left: 0;
+    width: 100%;
+  }
 
     // Dashboard layout: No left margin
     &.dashboard-layout {

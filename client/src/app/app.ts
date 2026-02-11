@@ -2,9 +2,9 @@ import { Component, signal, OnInit, ChangeDetectorRef, HostListener } from '@ang
 import { RouterOutlet, Router, NavigationEnd } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
-import { HeaderComponent } from './components/header/header.component';
-import { FooterComponent } from './components/footer/footer.component';
-import { SidebarComponent } from './components/sidebar/sidebar.component';
+import { HeaderComponent } from './components/layout/header/header.component';
+import { FooterComponent } from './components/layout/footer/footer.component';
+import { SidebarComponent } from './components/layout/sidebar/sidebar.component';
 
 import { SidebarService } from './services/sidebar.service';
 import { AuthService } from './services/auth.service';
@@ -21,6 +21,7 @@ interface MenuItem {
 
 @Component({
   selector: 'app-root',
+  standalone: true,
   imports: [CommonModule, RouterOutlet, HeaderComponent, FooterComponent, SidebarComponent],
   templateUrl: './app.html',
   styleUrl: './app.scss'
@@ -120,8 +121,17 @@ export class App implements OnInit {
     const currentRoute = this.getCurrentRoute();
     const routePath = currentRoute?.routeConfig?.path || '';
 
-    // Hide sidebar on login, register, dashboard, and profile pages
-    return routePath !== 'login' && routePath !== 'register' && routePath !== 'dashboard' && routePath !== 'profile';
+    // Hide sidebar on login, register, dashboard, profile, and home pages
+    return routePath !== 'login' && routePath !== 'register' && 
+           routePath !== 'dashboard' && routePath !== 'profile' && routePath !== '';
+  }
+
+  showFooter(): boolean {
+    const currentRoute = this.getCurrentRoute();
+    const routePath = currentRoute?.routeConfig?.path || '';
+
+    // Hide footer on login page only
+    return routePath !== 'login';
   }
 
   isDashboard(): boolean {

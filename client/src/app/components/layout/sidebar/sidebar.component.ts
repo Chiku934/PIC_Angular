@@ -1,9 +1,9 @@
 import { Component, OnInit, OnDestroy, ChangeDetectorRef, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule, NavigationEnd } from '@angular/router';
-import { AuthService } from '../../services/auth.service';
-import { SidebarService } from '../../services/sidebar.service';
-import { CompanyService, CompanyDetails } from '../../services/company.service';
+import { AuthService } from '../../../services/auth.service';
+import { SidebarService } from '../../../services/sidebar.service';
+import { CompanyService, CompanyDetails } from '../../../services/company.service';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 

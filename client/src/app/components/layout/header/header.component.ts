@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AuthService } from '../../services/auth.service';
-import { SidebarService } from '../../services/sidebar.service';
+import { AuthService } from '../../../services/auth.service';
+import { SidebarService } from '../../../services/sidebar.service';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
@@ -105,7 +105,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   hasProfileImage(): boolean {
-    return !!this.currentUser?.profileImage && this.currentUser.profileImage !== '/assets/images/default-profile-icon.png';
+    return !!this.currentUser?.UserImage && this.currentUser.UserImage !== '/assets/images/default-profile-icon.png';
   }
 
   navigateToProfile() {
