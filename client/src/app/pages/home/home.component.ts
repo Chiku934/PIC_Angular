@@ -1,45 +1,96 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Title } from '@angular/platform-browser';
+import { Router } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
+import { AuthService } from '../../services/auth.service';
+
+interface Application {
+  Id: number;
+  ApplicationName: string;
+  Url?: string;
+  IconImageUrl?: string;
+  IconClass?: string;
+  Children?: Application[];
+}
 
 @Component({
-  selector: 'app-home',
+  selector: 'app-dashboard',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss']
+  templateUrl: './dashboard.component.html',
+  styleUrls: ['./dashboard.component.scss']
 })
-export class HomeComponent {
-  constructor(private titleService: Title) {
-    this.titleService.setTitle('PIC - Dashboard');
-  }
-  features = [
-    {
-      title: 'Certificate Management',
-      description: 'Create, upload, and manage professional certificates with ease.',
-      icon: '📋'
-    },
-    {
-      title: 'Verification System',
-      description: 'Verify certificate authenticity with our advanced verification tools.',
-      icon: '✅'
-    },
-    {
-      title: 'Secure Storage',
-      description: 'Your certificates are stored securely with enterprise-grade encryption.',
-      icon: '🔒'
-    },
-    {
-      title: 'Easy Sharing',
-      description: 'Share certificates securely with employers and institutions.',
-      icon: '🔗'
-    }
-  ];
+export class DashboardComponent implements OnInit {
+  currentUser: any = null;
+  applications: Application[] = [];
 
-  stats = [
-    { number: '10K+', label: 'Certificates Issued' },
-    { number: '500+', label: 'Organizations' },
-    { number: '99.9%', label: 'Uptime' },
-    { number: '24/7', label: 'Support' }
-  ];
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private http: HttpClient,
+    private cdr: ChangeDetectorRef
+  ) {}
+
+  ngOnInit() {
+    this.authService.currentUser$.subscribe(user => {
+      this.currentUser = user;
+      if (user) {
+        this.loadUserMenu();
+      } else {
+        this.applications = [];
+      }
+    });
+  }
+
+  loadUserMenu() {
+    const token = this.authService.getToken();
+    if (token) {
+      this.http.get<Application[]>('/api/users/menu', {
+        headers: { Authorization: `Bearer ${token}` }
+      }).subscribe({
+        next: (apps) => {
+          this.applications = (apps || []).map(app => ({
+            ...app,
+            IconImageUrl: this.getAppIcon(app.ApplicationName)
+          }));
+          this.cdr.detectChanges(); // Force change detection
+        },
+        error: (error) => {
+          this.applications = [];
+        }
+      });
+    } else {
+      this.applications = [];
+    }
+  }
+
+  getAppIcon(appName: string): string {
+    const iconMap: { [key: string]: string } = {
+      'Audit': '/assets/icons/audit.png',
+      'Certification': '/assets/icons/certification.png',
+      'Setup': '/assets/icons/setup.png'
+    };
+
+    return iconMap[appName] || '/assets/images/default-profile-icon.png';
+  }
+
+  logout() {
+    this.authService.logout();
+    this.router.navigate(['/login']);
+  }
+
+  navigateToApp(app: Application) {
+    if (app.Url) {
+      // Handle navigation based on URL
+      if (app.Url.startsWith('/')) {
+        this.router.navigate([app.Url]);
+      } else {
+        window.open(app.Url, '_blank');
+      }
+    }
+  }
+
+  trackByAppId(index: number, app: Application): number {
+    return app.Id;
+  }
 }

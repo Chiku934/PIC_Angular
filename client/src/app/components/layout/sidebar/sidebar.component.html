@@ -1,0 +1,100 @@
+<div class="sidebar" 
+     [class.collapsed]="sidebarService.getState()"
+     [class.mobile-open]="!(sidebarService.isCollapsed$ | async)">
+  <div class="sidebar-header">
+    <div class="logo-section">
+      <img [src]="getCompanyLogoUrl()" alt="Company Logo" class="logo" (error)="onLogoError($event)">
+    </div>
+  </div>
+
+  <!-- Profile Section -->
+  <div class="profile-section">
+    <div class="profile-card">
+      <div class="profile-header">
+        <div class="profile-avatar">
+          <img [src]="getProfileImageUrl()" [alt]="getDisplayName()" class="avatar-img" (error)="onImageError($event)">
+          <div class="avatar-initials" *ngIf="!hasProfileImage()">
+            {{ getUserInitials() }}
+          </div>
+        </div>
+        <div class="profile-info">
+          <h3 class="profile-name">{{ getDisplayName() }}</h3>
+          <p class="profile-role">{{ formatRole(currentUser?.role || currentUser?.userRole || currentUser?.roleName || 'User') }}</p>
+          <div class="profile-location" *ngIf="currentUser?.location">
+            <i class="fas fa-map-marker-alt"></i>
+            <span>{{ currentUser.location }}</span>
+          </div>
+          <div class="profile-address" *ngIf="currentUser?.Address">
+            <i class="fas fa-home"></i>
+            <span>{{ currentUser.Address }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <nav class="sidebar-nav">
+    <ul class="nav-list">
+      <li *ngFor="let item of menuItems" class="nav-item">
+        <!-- Items with children (dropdown menus) -->
+        <div *ngIf="item.children" class="nav-item-group">
+          <a
+            [routerLink]="item.route"
+            class="nav-link nav-link-group"
+            [class.active]="item.route ? isActive(item.route) : false"
+            (click)="toggleSubmenu(item)">
+            <i [class]="item.icon" class="nav-icon"></i>
+            <span class="nav-text" *ngIf="!(sidebarService.isCollapsed$ | async)">{{ item.label }}</span>
+            <i class="fas fa-chevron-down toggle-icon" [class.rotated]="item.isExpanded" *ngIf="!(sidebarService.isCollapsed$ | async)"></i>
+          </a>
+
+          <ul class="submenu" [class.expanded]="item.isExpanded">
+            <li *ngFor="let child of item.children" class="submenu-item">
+              <a
+                *ngIf="!child.children && child.route"
+                [routerLink]="child.route"
+                class="submenu-link"
+                [class.active]="child.route ? isActive(child.route) : false">
+                <i [class]="child.icon" class="submenu-icon"></i>
+                <span class="submenu-text">{{ child.label }}</span>
+              </a>
+
+              <div *ngIf="child.children" class="submenu-item-group">
+                <a
+                  href="javascript:void(0)"
+                  class="submenu-link submenu-link-group"
+                  (click)="toggleSubmenu(child)">
+                  <i [class]="child.icon" class="submenu-icon"></i>
+                  <span class="submenu-text">{{ child.label }}</span>
+                  <i class="fas fa-chevron-down toggle-icon" [class.rotated]="child.isExpanded"></i>
+                </a>
+
+                <ul class="sub-submenu" [class.expanded]="child.isExpanded">
+                  <li *ngFor="let grandchild of child.children" class="sub-submenu-item">
+                    <a
+                      [routerLink]="grandchild.route"
+                      class="sub-submenu-link"
+                      [class.active]="grandchild.route ? isActive(grandchild.route) : false">
+                      <i [class]="grandchild.icon" class="sub-submenu-icon"></i>
+                      <span class="sub-submenu-text">{{ grandchild.label }}</span>
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Items without children (simple links) -->
+        <a
+          *ngIf="!item.children && item.route"
+          [routerLink]="item.route"
+          class="nav-link"
+          [class.active]="isActive(item.route)">
+          <i [class]="item.icon" class="nav-icon"></i>
+          <span class="nav-text" *ngIf="!(sidebarService.isCollapsed$ | async)">{{ item.label }}</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+</div>
